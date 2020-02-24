@@ -1,0 +1,47 @@
+<%- include("partials/header") -%>
+
+<body onload="checkRadio()">
+    <div class="container">
+        <% if(question.index==4) {%>
+        <% <div class="submit"> %>
+        <% <form action="/submit" method="post"> %>
+        <% <input type="submit" value="Submit"> %>
+        <% </form> %>
+        <% </div>} %>
+        <div class="question">
+            <h2><%=  question.question %></h2>
+        </div>
+        <form action="/question" method="post">
+            <div class="options">
+                <div class="row">
+                    <div class="col-6">
+                        <input type="radio" name="option" id="A" value="A"><label><%= question.A %></label>
+                    </div>
+                    <div class="col-6">
+                        <input type="radio" name="option" id="B" value="B"><label><%= question.B %></label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <input type="radio" name="option" id="C" value="C"><label><%= question.C %></label>
+                    </div>
+                    <div class="col-6">
+                        <input type="radio" name="option" id="D" value="D"><label><%= question.D %></label>
+                    </div>
+                </div>
+                <input type="hidden" id="chosen" value="<%= question.chosen %>">
+            </div>
+            <input name="move" class="btn btn-lg btn-success" type="submit" value="Prev">
+            <input name="move" class="btn btn-lg btn-success" type="submit" value="Save">
+            <input name="move" class="btn btn-lg btn-success" type="submit" value="Next">
+        </form>
+    </div>
+    <script>
+        function checkRadio() {
+            let id = document.getElementById("chosen").value;
+            if (id !== "")
+                document.getElementById(id).checked = true;
+        }
+    </script>
+</body>
+<%- include("partials/footer") -%>
