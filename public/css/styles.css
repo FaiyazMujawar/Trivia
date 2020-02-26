@@ -1,10 +1,23 @@
 .container {
-    width: 70%;
-    margin: auto;
     text-align: center;
-    padding-top: 15%;
 }
 
 .title {
     font-size: 5rem;
+}
+
+.submit {
+    text-align: right;
+    padding-bottom: 15%;
+    padding-top: 5%;
+}
+
+.options {
+    margin: 2%;
+    text-align: left;
+    margin-left: 25%;
+}
+
+.move {
+    margin: 0.5%;
 }

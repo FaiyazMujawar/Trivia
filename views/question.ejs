@@ -2,12 +2,11 @@
 
 <body onload="checkRadio()">
     <div class="container">
-        <% if(question.index==4) {%>
-        <% <div class="submit"> %>
-        <% <form action="/submit" method="post"> %>
-        <% <input type="submit" value="Submit"> %>
-        <% </form> %>
-        <% </div>} %>
+        <div class="submit">
+            <form action="/submit" method="GET">
+                <input class="btn btn-md btn-warning" type="submit" value="Submit!">
+            </form>
+        </div> %>
         <div class="question">
             <h2><%=  question.question %></h2>
         </div>
@@ -31,10 +30,11 @@
                 </div>
                 <input type="hidden" id="chosen" value="<%= question.chosen %>">
             </div>
-            <input name="move" class="btn btn-lg btn-success" type="submit" value="Prev">
-            <input name="move" class="btn btn-lg btn-success" type="submit" value="Save">
-            <input name="move" class="btn btn-lg btn-success" type="submit" value="Next">
+            <input name="move" class="btn btn-md btn-success move" type="submit" value="Prev">
+            <input name="move" class="btn btn-md btn-success move" type="submit" value="Save">
+            <input name="move" class="btn btn-md btn-success move" type="submit" value="Next">
         </form>
+        <p><b>* Press "Save" to save your answer!</b></p>
     </div>
     <script>
         function checkRadio() {

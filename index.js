@@ -53,7 +53,7 @@ app.get("/start", (req, res) => {
                         chosen: ""
                     });
                     i++;
-                })
+                });
                 res.redirect("/question");
             }
         }
@@ -79,6 +79,23 @@ app.post("/question", (req, res) => {
             currentIndex++;
     }
     res.redirect("/question");
+});
+
+app.get("/submit", (req, res) => {
+    let score = 0;
+    let msg;
+    questionList.forEach(question => {
+        if (question.chosen === question.answer) {
+            score++;
+        }
+    });
+    if (score > 4)
+        msg = "You are awesome! :P";
+    else if (score > 2)
+        msg = "Nice try! :)"
+    else
+        msg = "Better luck next time! ;(";
+    res.render("score", { score, msg });
 });
 
 const PORT = process.env.PORT || 3000;
