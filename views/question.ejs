@@ -3,9 +3,7 @@
 <body onload="checkRadio()">
     <div class="container">
         <div class="submit">
-            <form action="/submit" method="GET">
-                <input class="btn btn-md btn-warning" type="submit" value="Submit!">
-            </form>
+            <button class="btn btn-md btn-warning" onclick="submit()">Submit!</button>
         </div> %>
         <div class="question">
             <h2><%=  question.question %></h2>
@@ -41,6 +39,12 @@
             let id = document.getElementById("chosen").value;
             if (id !== "")
                 document.getElementById(id).checked = true;
+        }
+
+        function submit() {
+            if (window.confirm("Sure to submit?")) {
+                window.location.replace("/submit")
+            }
         }
     </script>
 </body>
