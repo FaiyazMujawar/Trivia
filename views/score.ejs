@@ -1,18 +1,28 @@
 <%- include("partials/header") -%>
 
-<body onunload="blockBack()">
+<body class="score-page">
     <div class="container">
-        <h1>
-            Score: <%= score %>
+        <h1 class="score">
+            Score : <%= score %>
         </h1>
+        <br />
+        <br />
         <h1>
             <%= msg %>
         </h1>
+        <br />
+        <button class="btn btn-lg btn-warning" onclick="start()">
+            Try Again
+        </button>
     </div>
 </body>
 <script>
-    function blockBack() {
-        window.location.href = "localhost:3000/submit";
+    history.pushState(null, null, location.href);
+    window.onpopstate = function() {
+        history.go(1);
+    };
+    function start() {
+        window.location.replace("/");
     }
 </script>
 <%- include("partials/footer") -%>

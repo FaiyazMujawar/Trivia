@@ -2,22 +2,57 @@
     text-align: center;
 }
 
+.home-page {
+    background-color: rgb(243, 161, 9);
+}
+
 .title {
-    font-size: 5rem;
+    margin-top: 10%;
 }
 
 .submit {
     text-align: right;
-    padding-bottom: 15%;
+    padding-bottom: 12%;
     padding-top: 5%;
 }
 
 .options {
     margin: 2%;
     text-align: left;
-    margin-left: 25%;
+    margin-left: 27%;
 }
 
 .move {
     margin: 0.5%;
+}
+
+.question {
+    border: 1rem solid rgb(185, 185, 77);
+    border-radius: 15px;
+    padding: 8% 5%;
+    color: white;
+    background: url("../images/blackboard.jpg");
+    font-family: "Fira Sans";
+}
+
+.question-page {
+    background-color: brown;
+}
+
+.question h2 {
+    font-family: "Montserrat";
+    font-size: 2.5rem;
+}
+
+.score-page {
+    padding: 15%;
+    background-color: antiquewhite;
+}
+
+.score {
+    border: 5px solid black;
+    border-radius: 10px;
+    width: fit-content;
+    margin: auto;
+    padding: 1rem;
 }

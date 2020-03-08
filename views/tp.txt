@@ -1,0 +1,22 @@
+<% if(typeof question!=="undefined") { %>
+
+<% }else { %>
+<body>
+    <div class="error">
+        <h1>Error!</h1>
+        <h3>
+            Please go back to home page and restart the test!
+        </h3>
+    </div>
+</body>
+<% } %> 
+
+
+<!-- <script type="text/javascript">
+            function preventBack() {
+                window.history.forward();
+            }
+            setTimeout("preventBack()", 0);
+            window.onunload = function() {
+                null;
+            }; -->

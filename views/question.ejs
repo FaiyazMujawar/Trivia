@@ -1,51 +1,92 @@
 <%- include("partials/header") -%>
-
-<body onload="checkRadio()">
+<body class="question-page" onload="checkRadio()">
     <div class="container">
         <div class="submit">
-            <button class="btn btn-md btn-warning" onclick="submit()">Submit!</button>
-        </div> %>
-        <div class="question">
-            <h2><%=  question.question %></h2>
+            <button class="btn btn-md btn-warning" onclick="submit()">
+                Submit!
+            </button>
         </div>
-        <form action="/question" method="post">
-            <div class="options">
-                <div class="row">
-                    <div class="col-6">
-                        <input type="radio" name="option" id="A" value="A"><label><%= question.A %></label>
+        <div class="question">
+            <h2>Q. <%= question.question %></h2>
+            <form action="/question" method="post">
+                <div class="options">
+                    <div class="row">
+                        <div class="col-6">
+                            <input
+                                type="radio"
+                                name="option"
+                                id="A"
+                                value="A"
+                            /><label> A. <%= question.A %></label>
+                        </div>
+                        <div class="col-6">
+                            <input
+                                type="radio"
+                                name="option"
+                                id="B"
+                                value="B"
+                            /><label> B. <%= question.B %></label>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <input type="radio" name="option" id="B" value="B"><label><%= question.B %></label>
+                    <div class="row">
+                        <div class="col-6">
+                            <input
+                                type="radio"
+                                name="option"
+                                id="C"
+                                value="C"
+                            /><label> C. <%= question.C %></label>
+                        </div>
+                        <div class="col-6">
+                            <input
+                                type="radio"
+                                name="option"
+                                id="D"
+                                value="D"
+                            /><label> D. <%= question.D %></label>
+                        </div>
                     </div>
+                    <input
+                        type="hidden"
+                        id="chosen"
+                        value="<%= question.chosen %>"
+                    />
                 </div>
-                <div class="row">
-                    <div class="col-6">
-                        <input type="radio" name="option" id="C" value="C"><label><%= question.C %></label>
-                    </div>
-                    <div class="col-6">
-                        <input type="radio" name="option" id="D" value="D"><label><%= question.D %></label>
-                    </div>
+                <div>
+                    <input
+                        name="move"
+                        class="btn btn-md btn-success move"
+                        type="submit"
+                        value="Prev"
+                    />
+                    <input
+                        name="move"
+                        class="btn btn-md btn-success move"
+                        type="submit"
+                        value="Save"
+                    />
+                    <input
+                        name="move"
+                        class="btn btn-md btn-success move"
+                        type="submit"
+                        value="Next"
+                    />
                 </div>
-                <input type="hidden" id="chosen" value="<%= question.chosen %>">
-            </div>
-            <input name="move" class="btn btn-md btn-success move" type="submit" value="Prev">
-            <input name="move" class="btn btn-md btn-success move" type="submit" value="Save">
-            <input name="move" class="btn btn-md btn-success move" type="submit" value="Next">
-        </form>
-        <p><b>* Press "Save" to save your answer!</b></p>
+            </form>
+            <p><b>* Press "Save" to save your answer!</b></p>
+        </div>
     </div>
     <script>
+        // window.onpopstate = window.location.replace("/");
         function checkRadio() {
             let id = document.getElementById("chosen").value;
-            if (id !== "")
-                document.getElementById(id).checked = true;
+            if (id !== "") document.getElementById(id).checked = true;
         }
 
         function submit() {
-            if (window.confirm("Sure to submit?")) {
-                window.location.replace("/submit")
-            }
+            window.location.replace("/submit");
         }
     </script>
 </body>
+
 <%- include("partials/footer") -%>
