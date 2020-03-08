@@ -2,7 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const session = require("express-session");
+const Session = require("express-session");
+
+let id = 1;
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -10,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(
-    session({
+    Session({
         secret: process.env.SECRET,
         name: "quiz",
         saveUninitialized: false,
@@ -32,10 +34,10 @@ const Question = require("./models/Question");
 const User = require("./models/User");
 
 // Declaring constants
-let question,
-    questionList = [];
-let n = 5; // Number of questions
-let currentIndex;
+// let question,
+//     questionList = [];
+// let n = 5; // Number of questions
+// let currentIndex;
 
 // Handling REQUESTS
 app.get("/", (req, res) => {
@@ -47,8 +49,13 @@ app.get("/home", (req, res) => {
 });
 
 app.get("/start", (req, res) => {
-    currentIndex = 0;
-    Question.findRandom({}, {}, { limit: n }, (err, result) => {
+    // currentIndex = 0;
+    let session = req.session;
+    session.currentIndex = 0;
+    session.n = 5;
+    session.name = id;
+    id++;
+    Question.findRandom({}, {}, { limit: 5 }, (err, result) => {
         if (err) {
             console.log(error);
         } else {
@@ -56,9 +63,9 @@ app.get("/start", (req, res) => {
                 console.log("Error!");
             } else {
                 let i = 0;
-                questionList = [];
+                session.questionList = [];
                 result.forEach(ques => {
-                    questionList.push({
+                    session.questionList.push({
                         index: i,
                         question: ques.question,
                         A: ques.A,
@@ -68,7 +75,7 @@ app.get("/start", (req, res) => {
                         answer: ques.answer,
                         chosen: ""
                     });
-                    console.log(ques.question);
+                    // console.log(ques.question);
                     i++;
                 });
                 res.redirect("/question");
@@ -78,37 +85,41 @@ app.get("/start", (req, res) => {
 });
 
 app.get("/question", (req, res) => {
-    question = { ...questionList[currentIndex] };
+    let session = req.session;
+    let question = { ...session.questionList[session.currentIndex] };
 
     res.render("question", { question });
 });
 
 app.post("/question", (req, res) => {
+    let session = req.session;
     let option = req.body.option;
     let move = req.body.move;
-    if (typeof option != "undefined") {
-        questionList[currentIndex].chosen = option;
+    if (typeof option !== "undefined") {
+        session.questionList[session.currentIndex].chosen = option;
     }
     if (move === "Prev") {
-        if (currentIndex > 0) currentIndex--;
+        if (session.currentIndex > 0) session.currentIndex--;
     } else if (move === "Next") {
-        if (currentIndex < n - 1) currentIndex++;
+        if (session.currentIndex < session.n - 1) session.currentIndex++;
     }
     res.redirect("/question");
 });
 
 app.get("/submit", (req, res) => {
+    let session = req.session;
     let score = 0;
     let msg;
-    questionList.forEach(question => {
+    session.questionList.forEach(question => {
         if (question.chosen === question.answer) {
             score++;
         }
     });
-    if (score > 0.75 * n) msg = "You are awesome! :P";
-    else if (score > 0.35 * n) msg = "Nice try! :)";
+    if (score > 0.75 * session.n) msg = "You are awesome! :P";
+    else if (score > 0.35 * session.n) msg = "Nice try! :)";
     else msg = "Better luck next time! ;(";
     res.render("score", { score, msg });
+    req.session.destroy();
 });
 
 app.route("/register")
