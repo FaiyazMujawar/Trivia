@@ -17,6 +17,8 @@ app.use(
         resave: false
     })
 );
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Connecting to MongoDB
 mongoose
@@ -38,17 +40,18 @@ passport.deserializeUser(User.deserializeUser());
 
 // Handling REQUESTS
 app.get("/", (req, res) => {
-    res.redirect("login");
-});
-
-app.get("/home", (req, res) => {
-    res.render("index");
+    if (req.isAuthenticated()) {
+        res.render("index");
+    } else {
+        res.redirect("/login");
+    }
 });
 
 app.get("/start", (req, res) => {
     let session = req.session;
     session.currentIndex = 0;
     session.n = 5;
+    session.isStrated = true;
     Question.findRandom({}, {}, { limit: 5 }, (err, result) => {
         if (err) {
             console.log(error);
@@ -79,9 +82,12 @@ app.get("/start", (req, res) => {
 
 app.get("/question", (req, res) => {
     let session = req.session;
-    let question = { ...session.questionList[session.currentIndex] };
-
-    res.render("question", { question });
+    if (session.isStrated) {
+        let question = { ...session.questionList[session.currentIndex] };
+        res.render("question", { question });
+    } else {
+        res.redirect("/");
+    }
 });
 
 app.post("/question", (req, res) => {
@@ -112,7 +118,7 @@ app.get("/submit", (req, res) => {
     else if (score > 0.35 * session.n) msg = "Nice try! :)";
     else msg = "Better luck next time! ;(";
     res.render("score", { score, msg });
-    req.session.destroy();
+    req.session.isStrated = false;
 });
 
 app.route("/register")
@@ -121,45 +127,25 @@ app.route("/register")
     })
     .post((req, res) => {
         const { username, password } = req.body;
-        /* const user = new User({
-            username,
-            password
-        });
-        user.save()
-            .then(() => console.log("Saved"))
-            .catch(error => console.log(error)); */
         User.register({ username: username }, password, error => {
             if (error) {
                 console.log(error);
-            }
+                res.redirect("/register");
+            } else res.redirect("/login");
         });
     });
 
-app.route("/login")
-    .get((req, res) => {
-        res.render("login");
-    })
-    .post((req, res) => {
-        const { username, password } = req.body;
-        /* User.findOne({ username: username }, (error, user) => {
-            if (error) {
-                console.log(error);
-            } else {
-                if (user) {
-                    if (user.password === password) {
-                        res.redirect("/home");
-                    } else res.redirect("/login");
-                }
-            }
-        }); */
-        passport.authenticate("local", {
-            failureRedirect: "/login"
-        }),
-            function(req, res) {
-                console.log("here");
-                res.redirect("/");
-            };
-    });
+app.get("/login", (req, res) => {
+    res.render("login");
+});
+
+app.post(
+    "/login",
+    passport.authenticate("local", { failureRedirect: "/login" }),
+    function(req, res) {
+        res.redirect("/");
+    }
+);
 
 const PORT = process.env.PORT || 3000;
 
