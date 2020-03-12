@@ -1,13 +1,11 @@
 require("dotenv").config();
 const express = require("express");
-const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const Session = require("express-session");
-
-let id = 1;
+const passport = require("passport");
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
@@ -33,11 +31,10 @@ mongoose
 const Question = require("./models/Question");
 const User = require("./models/User");
 
-// Declaring constants
-// let question,
-//     questionList = [];
-// let n = 5; // Number of questions
-// let currentIndex;
+passport.use(User.createStrategy());
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 // Handling REQUESTS
 app.get("/", (req, res) => {
@@ -49,12 +46,9 @@ app.get("/home", (req, res) => {
 });
 
 app.get("/start", (req, res) => {
-    // currentIndex = 0;
     let session = req.session;
     session.currentIndex = 0;
     session.n = 5;
-    session.name = id;
-    id++;
     Question.findRandom({}, {}, { limit: 5 }, (err, result) => {
         if (err) {
             console.log(error);
@@ -75,7 +69,6 @@ app.get("/start", (req, res) => {
                         answer: ques.answer,
                         chosen: ""
                     });
-                    // console.log(ques.question);
                     i++;
                 });
                 res.redirect("/question");
@@ -128,13 +121,18 @@ app.route("/register")
     })
     .post((req, res) => {
         const { username, password } = req.body;
-        const user = new User({
+        /* const user = new User({
             username,
             password
         });
         user.save()
             .then(() => console.log("Saved"))
-            .catch(error => console.log(error));
+            .catch(error => console.log(error)); */
+        User.register({ username: username }, password, error => {
+            if (error) {
+                console.log(error);
+            }
+        });
     });
 
 app.route("/login")
@@ -143,7 +141,7 @@ app.route("/login")
     })
     .post((req, res) => {
         const { username, password } = req.body;
-        User.findOne({ username: username }, (error, user) => {
+        /* User.findOne({ username: username }, (error, user) => {
             if (error) {
                 console.log(error);
             } else {
@@ -153,7 +151,14 @@ app.route("/login")
                     } else res.redirect("/login");
                 }
             }
-        });
+        }); */
+        passport.authenticate("local", {
+            failureRedirect: "/login"
+        }),
+            function(req, res) {
+                console.log("here");
+                res.redirect("/");
+            };
     });
 
 const PORT = process.env.PORT || 3000;
