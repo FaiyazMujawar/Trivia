@@ -56,3 +56,29 @@
     margin: auto;
     padding: 1rem;
 }
+
+.form {
+    width: 60%;
+    margin: 20% auto;
+    border: 1px solid grey;
+    border-radius: 5px;
+    padding: 3% 5%;
+}
+
+.form h2 {
+    margin-bottom: 2rem;
+}
+
+.form input[type="text"],
+input[type="password"] {
+    display: block;
+    padding: 1%;
+    margin-bottom: 1.5%;
+    width: 100%;
+}
+
+.form input[type="submit"],
+a {
+    margin: auto 0.3rem;
+    margin-top: 1rem;
+}

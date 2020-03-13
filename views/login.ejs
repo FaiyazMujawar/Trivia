@@ -1,12 +1,23 @@
 <%- include("partials/header") -%>
 <body>
     <div class="container">
-        <form action="/login" method="POST">
-            <input type="text" name="username" placeholder="Username" />
-            <input type="text" name="password" placeholder="Password" />
-            <input type="submit" value="Login" />
-        </form>
-        <a class="btn btn-md btn-primary" href="register">Register</a>
+        <div class="form">
+            <div>
+                <h2>Login</h2>
+            </div>
+            <form action="/login" method="POST">
+                <input type="text" name="username" placeholder="Username" />
+                <input type="password" name="password" placeholder="Password" />
+                <input
+                    class="btn btn-md btn-primary"
+                    type="submit"
+                    value="Login"
+                />
+                <a class="btn btn-md btn-outline-secondary" href="register"
+                    >Register</a
+                >
+            </form>
+        </div>
     </div>
 </body>
 <%- include("partials/footer") -%>
