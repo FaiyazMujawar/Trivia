@@ -41,6 +41,7 @@ passport.deserializeUser(User.deserializeUser());
 // Handling REQUESTS
 app.get("/", (req, res) => {
     if (req.isAuthenticated()) {
+        req.session.isStarted = false;
         res.render("index");
     } else {
         res.redirect("/login");
@@ -51,7 +52,7 @@ app.get("/start", (req, res) => {
     let session = req.session;
     session.currentIndex = 0;
     session.n = 5;
-    session.isStrated = true;
+    session.isStarted = true;
     Question.findRandom({}, {}, { limit: 5 }, (err, result) => {
         if (err) {
             console.log(error);
@@ -82,7 +83,7 @@ app.get("/start", (req, res) => {
 
 app.get("/question", (req, res) => {
     let session = req.session;
-    if (session.isStrated) {
+    if (session.isStarted) {
         let question = { ...session.questionList[session.currentIndex] };
         res.render("question", { question });
     } else {
@@ -118,7 +119,7 @@ app.get("/submit", (req, res) => {
     else if (score > 0.35 * session.n) msg = "Nice try! :)";
     else msg = "Better luck next time! ;(";
     res.render("score", { score, msg });
-    req.session.isStrated = false;
+    req.session.isStarted = false;
 });
 
 app.route("/register")
