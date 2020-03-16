@@ -40,45 +40,44 @@ passport.deserializeUser(User.deserializeUser());
 
 // Handling REQUESTS
 app.get("/", (req, res) => {
-    if (req.isAuthenticated()) {
-        req.session.isStarted = false;
-        res.render("index");
-    } else {
-        res.redirect("/login");
-    }
+    res.render("index");
 });
 
 app.get("/start", (req, res) => {
-    let session = req.session;
-    session.currentIndex = 0;
-    session.n = 5;
-    session.isStarted = true;
-    Question.findRandom({}, {}, { limit: 5 }, (err, result) => {
-        if (err) {
-            console.log(error);
-        } else {
-            if (!result) {
-                console.log("Error!");
+    if (req.isAuthenticated()) {
+        let session = req.session;
+        session.currentIndex = 0;
+        session.n = 5;
+        session.isStarted = true;
+        Question.findRandom({}, {}, { limit: 5 }, (err, result) => {
+            if (err) {
+                console.log(error);
             } else {
-                let i = 0;
-                session.questionList = [];
-                result.forEach(ques => {
-                    session.questionList.push({
-                        index: i,
-                        question: ques.question,
-                        A: ques.A,
-                        B: ques.B,
-                        C: ques.C,
-                        D: ques.D,
-                        answer: ques.answer,
-                        chosen: ""
+                if (!result) {
+                    console.log("Error!");
+                } else {
+                    let i = 0;
+                    session.questionList = [];
+                    result.forEach(ques => {
+                        session.questionList.push({
+                            index: i,
+                            question: ques.question,
+                            A: ques.A,
+                            B: ques.B,
+                            C: ques.C,
+                            D: ques.D,
+                            answer: ques.answer,
+                            chosen: ""
+                        });
+                        i++;
                     });
-                    i++;
-                });
-                res.redirect("/question");
+                    res.redirect("/question");
+                }
             }
-        }
-    });
+        });
+    } else {
+        res.redirect("/login");
+    }
 });
 
 app.get("/question", (req, res) => {
@@ -144,7 +143,7 @@ app.post(
     "/login",
     passport.authenticate("local", { failureRedirect: "/login" }),
     function(req, res) {
-        res.redirect("/");
+        res.redirect("/start");
     }
 );
 
